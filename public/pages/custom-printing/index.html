@@ -3,29 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Printing - BrandName</title>
+    <title>Custom Printing - Banday Glam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
-<nav class="main-nav">
-    <!-- Same navigation but with updated paths (../../) -->
-</nav>
-
-<main class="custom-printing">
-    <h1>Custom Printing Services</h1>
-
-    <section class="services-grid">
-        <div class="service-card">
-            <img src="../../public/images/tshirt-printing.jpg" alt="T-Shirt Printing">
-            <h3>T-Shirt Printing</h3>
-            <p>Custom designs on premium cotton</p>
+    <nav class="main-nav">
+        <div class="nav-background"></div>
+        <div class="nav-content">
+            <div class="logo" href="../../index.html">Banday Glam</div>
+            <ul>
+                <li><a href="index.html">Custom Printing</a></li>
+                <li><a href="../mens/index.html">Men's</a></li>
+                <li><a href="../womens/index.html">Women's</a></li>
+                <li><a href="../services/index.html">Services</a></li>
+                <li class="lang-switch">
+                    <a href="index.html" lang="en">EN</a>
+                    <span class="divider">/</span>
+                    <a href="arabic/index.html" lang="ar">ع</a>
+                </li>
+            </ul>
         </div>
-        <!-- More service cards -->
-    </section>
+    </nav>
 
-    <section class="pricing">
-        <!-- Pricing information -->
-    </section>
-</main>
+    <div class="custom-printing-container">
+        <section class="product-selection">
+            <h2>Select Your Product</h2>
+            <div class="product-grid">
+                <div class="product-option">
+                    <img src="../../images/tshirt-template.png" alt="T-Shirt">
+                    <label>
+                        <input type="radio" name="product" value="tshirt" checked>
+                        T-Shirt
+                    </label>
+                </div>
+                <div class="product-option">
+                    <img src="../../images/hoodie-template.png" alt="Hoodie">
+                    <label>
+                        <input type="radio" name="product" value="hoodie">
+                        Hoodie
+                    </label>
+                </div>
+                <div class="product-option">
+                    <img src="../../images/sweater-template.png" alt="Sweater">
+                    <label>
+                        <input type="radio" name="product" value="sweater">
+                        Sweater
+                    </label>
+                </div>
+                <div class="product-option">
+                    <img src="../../images/tank-template.png" alt="Tank Top">
+                    <label>
+                        <input type="radio" name="product" value="tank">
+                        Tank Top
+                    </label>
+                </div>
+                <div class="product-option">
+                    <img src="../../images/tote-template.png" alt="Tote Bag">
+                    <label>
+                        <input type="radio" name="product" value="tote">
+                        Tote Bag
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section class="design-upload">
+            <div class="upload-container">
+                <h2>Upload Your Design</h2>
+                <div class="upload-box" id="uploadBox">
+                    <input type="file" id="designUpload" accept="image/*" hidden>
+                    <label for="designUpload" class="upload-label">
+                        <img src="../../images/upload-icon.png" alt="Upload" class="upload-icon">
+                        <span>Click to upload or drag and drop</span>
+                        <span class="file-info">PNG, JPG, SVG (max 10MB)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <h3>Preview</h3>
+                <div class="product-preview">
+                    <img id="productPreview" src="../../images/tshirt-template.png" alt="Product Preview">
+                    <img id="designPreview" class="design-overlay" src="" alt="Your Design">
+                </div>
+                <div class="customization-options">
+                    <div class="size-selector">
+                        <label for="size">Size:</label>
+                        <select id="size">
+                            <option value="s">S</option>
+                            <option value="m">M</option>
+                            <option value="l">L</option>
+                            <option value="xl">XL</option>
+                        </select>
+                    </div>
+                    <div class="color-selector">
+                        <label>Color:</label>
+                        <div class="color-options">
+                            <button class="color-btn" style="background-color: white;"></button>
+                            <button class="color-btn" style="background-color: black;"></button>
+                            <button class="color-btn" style="background-color: gray;"></button>
+                            <button class="color-btn" style="background-color: navy;"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="order-summary">
+            <h3>Order Summary</h3>
+            <div class="price-details">
+                <span>Base Price:</span>
+                <span id="basePrice">$25.00</span>
+            </div>
+            <button class="cta-button proceed-btn">Proceed to Checkout</button>
+        </section>
+    </div>
+
+    <script src="../../js/custom-printing.js"></script>
 </body>
 </html>
