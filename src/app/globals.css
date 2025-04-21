@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #00F7FF;
+  --primary-purple: #BC00FF;
+  --bg-dark: #0A0A1F;
+}
+
+body {
+  @apply bg-white text-gray-900;
+}
+
+.nav-link {
+  @apply text-gray-700 hover:text-black transition-colors font-medium;
+}
+
+.btn-primary {
+  @apply bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow;
+}
+
+.section-title {
+  @apply text-3xl font-bold text-center mb-12;
+}
+
+/* We'll add more styles as we build out the UI properly */
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+  }
+  
+  .neon-border {
+    box-shadow: 0 0 10px rgba(188, 0, 255, 0.5);
+  }
+
+  .neon-text-blue {
+    color: var(--primary-blue);
+    text-shadow: 0 0 10px var(--primary-blue);
+  }
+
+  .neon-text-purple {
+    color: var(--primary-purple);
+    text-shadow: 0 0 10px var(--primary-purple);
+  }
+
+  .neon-gradient {
+    background: linear-gradient(to right, var(--primary-blue), var(--primary-purple));
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .glass-bg {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .bg-gradient-brand {
+    @apply bg-gradient-to-r from-neon-blue to-neon-purple;
+  }
+}
+
+/* Add custom styles for specific components */
+.hero-section {
+  background: linear-gradient(45deg, rgba(0, 247, 255, 0.1), rgba(188, 0, 255, 0.1));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+} 
