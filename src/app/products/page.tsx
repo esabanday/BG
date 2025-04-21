@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
-type Product = {
+interface Product {
   id: number
   name: string
+  description: string
   price: number
-  category: string
+  image: string
   colors: string[]
   sizes: string[]
-  image: string
 }
 
 type CartItem = Product & {
@@ -19,37 +20,46 @@ type CartItem = Product & {
   selectedSize: string
 }
 
-const mockProducts: Product[] = [
+const products: Product[] = [
   {
     id: 1,
-    name: 'Tote Bag',
-    price: 19.99,
-    category: 'Bags',
-    colors: ['Black', 'White', 'Navy'],
-    sizes: ['Standard'],
-    image: '/images/products/tote1.png'
+    name: "Custom T-Shirt",
+    description: "Design your own unique t-shirt with our easy-to-use tools",
+    price: 29.99,
+    image: "/images/products/tshirt.jpg",
+    colors: ["Red", "Blue", "Green", "Yellow"],
+    sizes: ["Small", "Medium", "Large", "XLarge"]
   },
   {
     id: 2,
-    name: 'Custom Socks',
-    price: 12.99,
-    category: 'Socks',
-    colors: ['Black', 'White', 'Gray'],
-    sizes: ['S', 'M', 'L'],
-    image: '/images/products/socks.png'
+    name: "Custom Hoodie",
+    description: "Create a cozy, personalized hoodie that stands out",
+    price: 49.99,
+    image: "/images/products/hoodie.jpg",
+    colors: ["Black", "Gray", "Brown"],
+    sizes: ["Small", "Medium", "Large", "XLarge"]
   },
   {
     id: 3,
-    name: 'Classic T-Shirt',
+    name: "Custom Tank Top",
+    description: "Design the perfect tank top for your active lifestyle",
     price: 24.99,
-    category: 'T-Shirts',
-    colors: ['Black', 'White', 'Navy'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    image: '/images/products/tshirt.png'
+    image: "/images/products/tank.jpg",
+    colors: ["Red", "Blue", "Green", "Yellow"],
+    sizes: ["Small", "Medium", "Large", "XLarge"]
+  },
+  {
+    id: 4,
+    name: "Custom Sweatshirt",
+    description: "Stay warm in style with a custom-designed sweatshirt",
+    price: 39.99,
+    image: "/images/products/sweatshirt.jpg",
+    colors: ["Red", "Blue", "Green", "Yellow"],
+    sizes: ["Small", "Medium", "Large", "XLarge"]
   }
 ]
 
-export default function Products() {
+export default function ProductsPage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [showCart, setShowCart] = useState(false)
@@ -85,144 +95,95 @@ export default function Products() {
     ))
   }
 
-  const categories = ['All', ...Array.from(new Set(mockProducts.map(p => p.category)))]
+  const categories = ['All', ...Array.from(new Set(products.map(p => p.name)))]
 
   return (
-    <div className="min-h-screen bg-white pt-20">
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-8">
-          <span className="text-neon-blue">Shop</span>{' '}
-          <span className="text-neon-purple">Products</span>
-        </h1>
-
-        {/* Cart Button */}
-        <button 
-          onClick={() => setShowCart(!showCart)}
-          className="fixed top-24 right-4 bg-neon-purple text-white p-3 rounded-full shadow-lg z-50"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          {cart.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-neon-blue text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {cart.length}
-            </span>
-          )}
-        </button>
-
-        {/* Cart Sidebar */}
-        {showCart && (
-          <div className="fixed top-0 right-0 w-96 h-screen bg-white shadow-lg p-6 z-40">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">Your Cart</h2>
-              <button onClick={() => setShowCart(false)} className="text-gray-500">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            {cart.length === 0 ? (
-              <p className="text-gray-500">Your cart is empty</p>
-            ) : (
-              <div className="space-y-4">
-                {cart.map(item => (
-                  <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
-                    <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{item.name}</h3>
-                      <p className="text-sm text-gray-500">{item.selectedColor} - {item.selectedSize}</p>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <button 
-                          onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                          className="w-8 h-8 flex items-center justify-center border rounded"
-                        >
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-8 h-8 flex items-center justify-center border rounded"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => removeFromCart(item.id)}
-                      className="text-red-500"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
-                <div className="border-t pt-4">
-                  <div className="flex justify-between mb-4">
-                    <span>Total</span>
-                    <span>${cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
-                  </div>
-                  <button className="w-full bg-neon-blue text-white py-3 rounded-lg">
-                    Checkout
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Categories */}
-        <div className="flex space-x-4 mb-8 overflow-x-auto pb-4">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full whitespace-nowrap ${
-                selectedCategory === category
-                  ? 'bg-neon-blue text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
+          <p className="text-xl">Express yourself with custom-designed apparel</p>
         </div>
+      </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {mockProducts
-            .filter(product => selectedCategory === 'All' || product.category === selectedCategory)
-            .map(product => (
-              <div key={product.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="relative h-64">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                  <p className="text-neon-purple font-bold mb-4">${product.price}</p>
-                  <div className="flex space-x-2 mb-4">
-                    {product.colors.map(color => (
+      {/* Products Grid */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105"
+            >
+              <div className="relative h-64">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                <p className="text-gray-600 mb-4">{product.description}</p>
+                
+                {/* Color and Size Selectors */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                  <div className="flex gap-2">
+                    {product.colors.map((color) => (
                       <div
                         key={color}
-                        className="w-6 h-6 rounded-full border"
+                        className="w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer"
                         style={{ backgroundColor: color.toLowerCase() }}
                       />
                     ))}
                   </div>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="w-full bg-neon-blue text-white py-2 rounded-lg hover:opacity-90"
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                  <div className="flex gap-2">
+                    {product.sizes.map((size) => (
+                      <div
+                        key={size}
+                        className="px-2 py-1 text-sm border rounded cursor-pointer hover:bg-gray-100"
+                      >
+                        {size}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-2xl font-bold text-purple-600">
+                    ${product.price}
+                  </span>
+                  <Link
+                    href="/design-studio"
+                    className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
                   >
-                    Add to Cart
-                  </button>
+                    Customize
+                  </Link>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <div className="bg-gray-100 py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to create your own design?</h2>
+          <p className="text-gray-600 mb-8">
+            Use our intuitive design studio to bring your vision to life
+          </p>
+          <Link
+            href="/design-studio"
+            className="bg-purple-600 text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-purple-700 transition-colors"
+          >
+            Start Designing
+          </Link>
         </div>
       </div>
     </div>
