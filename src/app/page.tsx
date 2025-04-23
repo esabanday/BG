@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -12,10 +13,17 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {['T-Shirts', 'Hoodies', 'Tank Tops'].map((product) => (
               <div key={product} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                <div className="h-64 bg-gray-200"></div>
+                <div className="relative h-64">
+                  <Image
+                    src={`/images/${product.toLowerCase().replace(' ', '')}.png`}
+                    alt={product}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{product}</h3>
-                  <p className="text-gray-600">Starting at $19.99</p>
+                  <p className="text-gray-600">Starting at 120 d.h.</p>
                 </div>
               </div>
             ))}
