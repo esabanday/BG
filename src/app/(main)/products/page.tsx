@@ -100,7 +100,7 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16">
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16 pt-32">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
           <p className="text-xl">Express yourself with custom-designed apparel</p>

@@ -13,6 +13,15 @@ export interface Product {
   updatedAt: Date;
 }
 
+export interface ProductInput {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  colors: string[];
+  sizes: string[];
+}
+
 export interface ProductDocument extends Product {
   _id: ObjectId;
 } 

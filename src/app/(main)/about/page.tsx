@@ -4,7 +4,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="relative py-20 bg-gradient-to-r from-purple-600 to-indigo-600">
+      <div className="relative py-20 pt-32 bg-gradient-to-r from-purple-600 to-indigo-600">
         <div className="container mx-auto px-6">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
             About BandayGlam
@@ -76,19 +76,19 @@ export default function About() {
         <div className="grid md:grid-cols-3 gap-8">
           {[
             {
-              name: "Sarah Johnson",
-              role: "Founder & CEO",
-              image: "/images/team/sarah.jpg"
+              name: "Mahand Bunaim",
+              role: "CEO",
+              image: "/images/team/mahand.jpg"
             },
             {
-              name: "Mike Chen",
-              role: "Head of Design",
-              image: "/images/team/mike.jpg"
+              name: "Muhammed Khalid",
+              role: "CFO",
+              image: "/images/team/khalid.jpg"
             },
             {
-              name: "Emma Davis",
-              role: "Tech Lead",
-              image: "/images/team/emma.jpg"
+              name: "Burhan Farouq",
+              role: "Founder & Fabric Mastermind",
+              image: "/images/team/Burhan.jpg"
             }
           ].map((member, index) => (
             <div key={index} className="text-center">

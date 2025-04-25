@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
+import crypto from 'crypto';
 
 const shopify = shopifyApi({
   apiKey: process.env.SHOPIFY_API_KEY!,
@@ -18,33 +19,69 @@ const shopify = shopifyApi({
 });
 
 export async function GET(request: NextRequest) {
+  console.log('Auth route hit');
+  console.log('Full URL:', request.url);
+  
   const searchParams = request.nextUrl.searchParams;
+  console.log('All search params:', Object.fromEntries(searchParams));
+  
   const shop = searchParams.get('shop');
-  const code = searchParams.get('code');
+  const hmac = searchParams.get('hmac');
+  const timestamp = searchParams.get('timestamp');
 
-  if (!shop || !code) {
-    return NextResponse.json({ error: 'Missing shop or code parameter' }, { status: 400 });
+  console.log('Shop:', shop);
+  console.log('HMAC:', hmac);
+  console.log('Timestamp:', timestamp);
+
+  // Step 1: Verify the installation request
+  if (!shop || !hmac || !timestamp) {
+    console.log('Missing required parameters');
+    return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
   }
 
-  try {
-    // Get the access token using the OAuth flow
-    const accessToken = await shopify.auth.oauth.requestAccessToken({
-      code,
-      shop,
-    });
+  // Verify HMAC
+  const queryString = Object.entries(Object.fromEntries(searchParams))
+    .filter(([key]) => key !== 'hmac')
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
 
-    // Store the access token securely
-    // You might want to store this in your database
-    console.log('Access token:', accessToken);
+  console.log('Query string for HMAC:', queryString);
 
-    // Redirect to the callback URL
-    const callbackUrl = new URL('/api/auth/callback', request.url);
-    return NextResponse.redirect(callbackUrl);
-  } catch (error) {
-    console.error('OAuth error:', error);
-    return NextResponse.json({ 
-      error: 'Failed to get access token',
-      details: error instanceof Error ? error.message : String(error)
-    }, { status: 500 });
+  const generatedHash = crypto
+    .createHmac('sha256', process.env.SHOPIFY_API_SECRET as string)
+    .update(queryString)
+    .digest('hex');
+
+  console.log('Generated HMAC:', generatedHash);
+  console.log('Received HMAC:', hmac);
+
+  if (generatedHash !== hmac) {
+    console.log('HMAC verification failed');
+    return NextResponse.json({ error: 'Invalid HMAC' }, { status: 401 });
   }
+
+  // Step 2: Request authorization code
+  const scopes = [
+    'read_products',
+    'write_products',
+    'read_orders',
+    'write_orders',
+    'read_inventory',
+    'write_inventory'
+  ].join(',');
+
+  const redirectUri = 'http://localhost:3000/api/auth/callback';
+  const nonce = crypto.randomBytes(16).toString('hex');
+
+  console.log('Redirect URI:', redirectUri);
+  console.log('Nonce:', nonce);
+
+  const authUrl = `https://${shop}/admin/oauth/authorize?client_id=${
+    process.env.SHOPIFY_API_KEY
+  }&scope=${scopes}&redirect_uri=${redirectUri}&state=${nonce}`;
+
+  console.log('Auth URL:', authUrl);
+
+  return NextResponse.redirect(authUrl);
 } 
