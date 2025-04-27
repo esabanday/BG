@@ -14,17 +14,19 @@ export class ShopifyAdapter {
           inventory_management: 'shopify',
           inventory_policy: 'deny',
           inventory_quantity: 100,
-          requires_shipping: true
+          requires_shipping: true,
+          option1: product.colors[0] || 'Default',
+          option2: product.sizes[0] || 'One Size'
         }
       ],
       options: [
         {
-          name: 'Size',
-          values: product.sizes
+          name: 'Color',
+          values: product.colors.length > 0 ? product.colors : ['Default']
         },
         {
-          name: 'Color',
-          values: product.colors
+          name: 'Size',
+          values: product.sizes.length > 0 ? product.sizes : ['One Size']
         }
       ]
     };

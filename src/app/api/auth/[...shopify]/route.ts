@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
+import { restResources } from '@shopify/shopify-api/rest/admin/2024-01';
+import { Node } from '@shopify/shopify-api/runtime/node';
 import crypto from 'crypto';
 
 const shopify = shopifyApi({
@@ -16,6 +18,8 @@ const shopify = shopifyApi({
   hostName: process.env.SHOPIFY_STORE_URL!,
   apiVersion: LATEST_API_VERSION,
   isEmbeddedApp: false,
+  restResources,
+  runtime: Node,
 });
 
 export async function GET(request: NextRequest) {
