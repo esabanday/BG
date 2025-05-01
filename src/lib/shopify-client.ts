@@ -23,4 +23,4 @@ const shopify = shopifyApi({
   restResources
 });
 
-export default shopify; 
+export default shopify;

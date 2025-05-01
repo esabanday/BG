@@ -26,34 +26,34 @@ const products: Product[] = [
     name: "Custom T-Shirt",
     description: "Design your own unique t-shirt with our easy-to-use tools",
     price: 29.99,
-    image: "/images/products/tshirt.jpg",
+    image: "/images/products/tshirt.png",
     colors: ["Red", "Blue", "Green", "Yellow"],
     sizes: ["Small", "Medium", "Large", "XLarge"]
   },
   {
     id: 2,
-    name: "Custom Hoodie",
-    description: "Create a cozy, personalized hoodie that stands out",
+    name: "Custom Tote",
+    description: "Create a cozy, personalized tote bag that stands out",
     price: 49.99,
-    image: "/images/products/hoodie.jpg",
+    image: "/images/products/tote1.png",
     colors: ["Black", "Gray", "Brown"],
     sizes: ["Small", "Medium", "Large", "XLarge"]
   },
   {
     id: 3,
-    name: "Custom Tank Top",
-    description: "Design the perfect tank top for your active lifestyle",
+    name: "Custom Socks",
+    description: "Design the perfect socks for your active lifestyle",
     price: 24.99,
-    image: "/images/products/tank.jpg",
+    image: "/images/products/socks.png",
     colors: ["Red", "Blue", "Green", "Yellow"],
     sizes: ["Small", "Medium", "Large", "XLarge"]
   },
   {
     id: 4,
-    name: "Custom Sweatshirt",
-    description: "Stay warm in style with a custom-designed sweatshirt",
+    name: "Custom Sweater",
+    description: "Stay warm in style with a custom-designed sweater",
     price: 39.99,
-    image: "/images/products/sweatshirt.jpg",
+    image: "/images/products/sweater.jpg",
     colors: ["Red", "Blue", "Green", "Yellow"],
     sizes: ["Small", "Medium", "Large", "XLarge"]
   }

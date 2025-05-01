@@ -4,6 +4,7 @@ import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import clientPromise from '@/lib/mongodb';
 import { ShopifyAdapter } from '@/lib/shopify';
+import sharp from 'sharp';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,20 +20,61 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check file size (2MB limit)
+    if (file.size > 2 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'File size must be less than 2MB' },
+        { status: 400 }
+      );
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+
+    // Process image with sharp
+    const image = sharp(buffer);
+    const metadata = await image.metadata();
+
+    // Optimize image to fit within 2MB
+    let processedImage = image;
+    let quality = 80; // Start with 80% quality
+
+    // If image is too large, resize and compress
+    if (metadata.width && metadata.height) {
+      // Calculate target dimensions while maintaining aspect ratio
+      const maxDimension = 1200; // Reasonable max dimension for web
+      let targetWidth = metadata.width;
+      let targetHeight = metadata.height;
+
+      if (metadata.width > maxDimension || metadata.height > maxDimension) {
+        if (metadata.width > metadata.height) {
+          targetWidth = maxDimension;
+          targetHeight = Math.round((metadata.height * maxDimension) / metadata.width);
+        } else {
+          targetHeight = maxDimension;
+          targetWidth = Math.round((metadata.width * maxDimension) / metadata.height);
+        }
+      }
+
+      processedImage = image
+        .resize(targetWidth, targetHeight, {
+          fit: 'inside',
+          withoutEnlargement: true
+        })
+        .jpeg({ quality }); // Convert to JPEG for better compression
+    }
 
     // Create a unique filename using the product name
     const sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
     const uniqueId = uuidv4().slice(0, 8);
-    const extension = file.name.split('.').pop();
-    const filename = `${sanitizedName}-${uniqueId}.${extension}`;
+    const filename = `${sanitizedName}-${uniqueId}.jpg`; // Always save as jpg for better compression
 
     // Save to public directory
     const publicDir = join(process.cwd(), 'public', 'uploads');
     const filepath = join(publicDir, filename);
     
-    await writeFile(filepath, buffer);
+    // Save processed image
+    await processedImage.toFile(filepath);
 
     // Save to MongoDB
     const client = await clientPromise;
@@ -51,10 +93,10 @@ export async function POST(request: NextRequest) {
     const shopifyProduct = ShopifyAdapter.toShopify({
       name,
       description,
-      price: 0, // You might want to add a price field to the form
-      image: `/uploads/${filename}`,
-      colors: ['Default'], // Adding a default color option
-      sizes: ['One Size'], // Adding a default size option
+      price: 0,
+      image: `https://www.bandayglam.com/uploads/${filename}`,
+      colors: ['Default'],
+      sizes: ['One Size'],
       createdAt: new Date(),
       updatedAt: new Date()
     });
