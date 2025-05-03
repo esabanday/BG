@@ -1,7 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { Product, ProductInput } from '@/models/Product';
-import shopify from '@/lib/shopify-client';
+
+// Function to make Shopify API requests
+async function shopifyRequest(path: string, method: string = 'GET', data?: any) {
+  const response = await fetch(`https://${process.env.SHOPIFY_STORE_URL}/admin/api/2024-01/${path}`, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN!
+    },
+    body: data ? JSON.stringify(data) : undefined
+  });
+
+  if (!response.ok) {
+    throw new Error(`Shopify API error: ${response.statusText}`);
+  }
+
+  return response.json();
+}
 
 export async function GET() {
   try {
@@ -68,18 +85,13 @@ export async function POST(request: NextRequest) {
       ]
     };
 
-    const session = shopify.session.customAppSession(process.env.SHOPIFY_STORE_URL!);
-    const shopifyClient = new shopify.clients.Rest({ session });
-    
-    const shopifyResponse = await shopifyClient.post({
-      path: 'products',
-      data: { product: shopifyProduct }
-    });
+    // Create product in Shopify using direct API call
+    const shopifyResponse = await shopifyRequest('products.json', 'POST', { product: shopifyProduct });
 
     // Update MongoDB product with Shopify ID
     await db.collection("products").updateOne(
       { _id: result.insertedId },
-      { $set: { shopifyId: shopifyResponse.body.product.id.toString() } }
+      { $set: { shopifyId: shopifyResponse.product.id.toString() } }
     );
     
     return NextResponse.json({ 
@@ -88,7 +100,7 @@ export async function POST(request: NextRequest) {
       product: {
         ...product,
         _id: result.insertedId,
-        shopifyId: shopifyResponse.body.product.id
+        shopifyId: shopifyResponse.product.id
       }
     });
   } catch (error) {

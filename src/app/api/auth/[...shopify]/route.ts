@@ -1,26 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
-import { restResources } from '@shopify/shopify-api/rest/admin/2024-01';
-import { Node } from '@shopify/shopify-api/runtime/node';
 import crypto from 'crypto';
-
-const shopify = shopifyApi({
-  apiKey: process.env.SHOPIFY_API_KEY!,
-  apiSecretKey: process.env.SHOPIFY_API_SECRET!,
-  scopes: [
-    'read_products',
-    'write_products',
-    'read_orders',
-    'write_orders',
-    'read_inventory',
-    'write_inventory'
-  ],
-  hostName: process.env.SHOPIFY_STORE_URL!,
-  apiVersion: LATEST_API_VERSION,
-  isEmbeddedApp: false,
-  restResources,
-  runtime: Node,
-});
+import { shopify } from '../../../../lib/shopify-adapter';
 
 export async function GET(request: NextRequest) {
   console.log('Auth route hit');
